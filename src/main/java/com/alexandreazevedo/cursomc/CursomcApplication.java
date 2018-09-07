@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.alexandreazevedo.cursomc.domain.Categoria;
 import com.alexandreazevedo.cursomc.domain.Cidade;
+import com.alexandreazevedo.cursomc.domain.Cliente;
+import com.alexandreazevedo.cursomc.domain.Endereco;
 import com.alexandreazevedo.cursomc.domain.Estado;
 import com.alexandreazevedo.cursomc.domain.Produto;
+import com.alexandreazevedo.cursomc.domain.enums.TipoCliente;
 import com.alexandreazevedo.cursomc.repositories.CategoriaRepository;
 import com.alexandreazevedo.cursomc.repositories.CidadeRepository;
+import com.alexandreazevedo.cursomc.repositories.ClienteRepository;
+import com.alexandreazevedo.cursomc.repositories.EnderecoRepository;
 import com.alexandreazevedo.cursomc.repositories.EstadoRepository;
 import com.alexandreazevedo.cursomc.repositories.ProdutoRepository;
 
@@ -27,6 +32,10 @@ public class CursomcApplication implements CommandLineRunner{
 	EstadoRepository estadoRepository;	
 	@Autowired
 	CidadeRepository cidadeRepository;
+	@Autowired
+	ClienteRepository clienteRepository;
+	@Autowired
+	EnderecoRepository enderecoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -65,5 +74,16 @@ public class CursomcApplication implements CommandLineRunner{
 		estadoRepository.saveAll(Arrays.asList(sp, mg));
 		cidadeRepository.saveAll(Arrays.asList(uberlandia, saopaulo, campinas));
 	
+		
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOA_FISICA);
+		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
+		
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto", "Jardim", "38220834", cli1, uberlandia);
+		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, saopaulo);
+	
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+	
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
 	}
 }
