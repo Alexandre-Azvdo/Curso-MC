@@ -1,5 +1,6 @@
 package com.alexandreazevedo.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.alexandreazevedo.cursomc.domain.Categoria;
+import com.alexandreazevedo.cursomc.repositories.CategoriaRepository;
 import com.alexandreazevedo.cursomc.services.exceptions.DataIntegrityException;
 import com.alexandreazevedo.cursomc.services.exceptions.ObjectNotFoundException;
-import com.alexandreazevedo.cursomc.repositories.CategoriaRepository;
 
 @Service
 public class CategoriaService {
@@ -40,5 +41,9 @@ public class CategoriaService {
 		}catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir uma Categoria que possui Produtos");
 		}
+	}
+
+	public List<Categoria> findAll() {		
+		return repo.findAll();
 	}	
 }
