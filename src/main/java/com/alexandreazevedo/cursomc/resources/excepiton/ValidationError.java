@@ -18,6 +18,6 @@ public class ValidationError extends StandardError {
 	}
 
 	public void addError(String filedName, String messagem) {
-		this.errors.add(new FieldMessage(filedName, messagem));
+		errors.add(new FieldMessage(filedName, messagem));
 	}
 }
