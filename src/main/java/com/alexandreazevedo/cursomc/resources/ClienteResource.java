@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.alexandreazevedo.cursomc.domain.Cliente;
 import com.alexandreazevedo.cursomc.dto.ClienteDTO;
+import com.alexandreazevedo.cursomc.dto.ClienteNewDTO;
 import com.alexandreazevedo.cursomc.services.ClienteService;
 
 @RestController
@@ -36,7 +37,7 @@ public class ClienteResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO objDto){
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto){
 		Cliente obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
 		// Pega a URI do novo recurso que foi inserido
