@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alexandreazevedo.cursomc.domain.Cidade;
 import com.alexandreazevedo.cursomc.domain.Cliente;
 import com.alexandreazevedo.cursomc.domain.Endereco;
+import com.alexandreazevedo.cursomc.domain.enums.Perfil;
 import com.alexandreazevedo.cursomc.domain.enums.TipoCliente;
 import com.alexandreazevedo.cursomc.dto.ClienteDTO;
 import com.alexandreazevedo.cursomc.dto.ClienteNewDTO;
 import com.alexandreazevedo.cursomc.repositories.ClienteRepository;
 import com.alexandreazevedo.cursomc.repositories.EnderecoRepository;
+import com.alexandreazevedo.cursomc.security.UserSS;
+import com.alexandreazevedo.cursomc.services.exceptions.AuthorizationException;
 import com.alexandreazevedo.cursomc.services.exceptions.DataIntegrityException;
 import com.alexandreazevedo.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -27,15 +30,21 @@ import com.alexandreazevedo.cursomc.services.exceptions.ObjectNotFoundException;
 public class ClienteService {
 	
 	@Autowired
+	private BCryptPasswordEncoder pe;
+	
+	@Autowired
 	private ClienteRepository repo;
 	
 	@Autowired
-	private EnderecoRepository enderecoRepository;
-	
-	@Autowired
-	private BCryptPasswordEncoder pe;
+	private EnderecoRepository enderecoRepository;	
 	
 	public Cliente find(Integer id) {
+		
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado!");
+		}
+		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
